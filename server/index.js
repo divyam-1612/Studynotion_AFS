@@ -20,12 +20,21 @@ database.connect()
 
 app.use(express.json())
 app.use(cookieParser())
-app.use(
-    cors({
-        origin:"http://localhost:3000",
-        credentials: true,
-    })
-)
+const allowedOrigins = ["https://studynotion-afs.onrender.com"];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+  },
+  methods: 'GET,POST,PUT,DELETE,HEAD,PATCH',
+  allowedHeaders: 'Content-Type',
+  credentials: true,
+  
+}));
 
 app.use(
     fileUpload({
